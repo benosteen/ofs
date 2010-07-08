@@ -15,7 +15,7 @@ class PersistentState(object):
     
     def set_filepath(self, filepath, filename=PERSISTENCE_FILENAME, create = True):
         if path.isdir(filepath):
-            print "Filepath exists - setting persistence file to %s" % path.join(filepath, filename)
+            # print "Filepath exists - setting persistence file to %s" % path.join(filepath, filename)
             self.filepath = path.join(filepath, filename)
             if create and not path.isfile(self.filepath):
                 self.sync()

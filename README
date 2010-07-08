@@ -1,0 +1,12 @@
+Blobstore
+
+Usage:
+
+(local version - depends on 'pairtree', and 'simplejson')
+
+>>> from ofs.local import OFS
+
+>>> o = OFS()
+(Equivalent to 'o = OFS(storage_dir = "data", uri_base="urn:uuid:", hashing_type="md5")')
+
+>>> 
