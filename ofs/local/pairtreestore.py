@@ -47,7 +47,10 @@ class OFS(object):
             uuid = uuid4().hex
         self._setup_item(uuid)
         return uuid
-    
+        
+    def list_ids(self):
+        return self._store.list_ids()
+        
     def put_stream(self, uuid, stream_object, filename, params={}):
         ## QUESTION: do we enforce that the uuid's have to be 'claimed' first?
         ## NB this method doesn't care if it has been
@@ -56,12 +59,13 @@ class OFS(object):
         stat_vals = po.stat(filename)
         if '_filename' in json_payload.keys():
             # remove old file which has a different name
-            po.del_file(json_payload['filename'])
+            po.del_file(json_payload['_filename'])
+            creation_date = None
         else:
             # New upload - record creation date
             creation_date = datetime.now().isoformat().split(".")[0]  ## '2010-07-08T19:56:47'
         # Userland parameters for the file
-        cleaned_params = dict( [ (k, params[k]) for key in params if not key.startswith("_")])
+        cleaned_params = dict( [ (k, params[k]) for k in params if not k.startswith("_")])
         json_payload.update(cleaned_params)
         # Filedetails: _filename, _numberofbytes (in bytes)
         json_payload['_filename'] = filename
@@ -99,7 +103,7 @@ class OFS(object):
         if self.exists(uuid) and isinstance(params, dict):
             _, json_payload = self._get_object(uuid)
             # Userland parameters for the file
-            cleaned_params = dict([(k, params[k]) for key in params if not key.startswith("_")])
+            cleaned_params = dict([(k, params[k]) for k in params if not k.startswith("_")])
             json_payload.update(cleaned_params)
             json_payload.sync()
             return json_payload.state
